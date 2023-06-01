@@ -7,7 +7,7 @@ List<Icon> iconico = [
 
 ];
 
-var tipospesquisa = [
+var typeopc = [
   'Skill Card',
   'Spell Card',
   'Trap Card',

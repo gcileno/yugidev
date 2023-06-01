@@ -17,6 +17,62 @@ Widget mostrarWidgets(List<Widget> widgets) {
   );
 }
 
+Container descricao(String text) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.indigo[50],
+      borderRadius: BorderRadius.circular(8),
+    ),
+    padding: EdgeInsets.all(8),
+    child: Text(
+      text,
+      style: TextStyle(
+        fontWeight: FontWeight.normal,
+        fontSize: 16,
+      ),
+    ),
+  );
+}
+
+class ShowImage extends StatelessWidget {
+  final String imageUrl;
+  final String nome;
+  final String textButon;
+
+  ShowImage(
+      {required this.imageUrl, required this.nome, required this.textButon});
+
+  void mostrarImagem(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(nome),
+          content: Image.network(imageUrl),
+          actions: [
+            TextButton(
+              child: Text('Fechar'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        mostrarImagem(context);
+      },
+      child: Text(textButon),
+    );
+  }
+}
+
 class Telas {
   final ValueNotifier<List> tableStateNotifier = new ValueNotifier([]);
 
@@ -91,8 +147,8 @@ class Telas {
     cartoes = jcards.map<Widget>((xcard) {
       return Card(
         child: Container(
-          height: 100,
-          width: 300,
+          height: 250,
+          width: 100,
           child: Row(
             children: [
               Container(
@@ -105,13 +161,39 @@ class Telas {
                   children: [
                     Row(
                       children: [
-                        Expanded(child: Text(xcard["name"])),
-                        Expanded(child: Text(xcard["frameType"])),
+                        Expanded(
+                            child: Text("Nome: " + xcard["name"],
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ))),
+                        Expanded(
+                            child: Text("Tipo: " + xcard["frameType"],
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ))),
                       ],
                     ),
                     Expanded(
-                      child: Text(xcard["desc"]),
+                      child: descricao(xcard["desc"]),
                     ),
+                    Row(children: [
+                      Expanded(
+                        child: ShowImage(
+                          imageUrl: xcard["card_images"][0]["image_url"],
+                          nome: xcard["name"],
+                          textButon: "Mostrar Carta",
+                        ),
+                      ), //mostrar carta completa
+                      Expanded(
+                        child: ShowImage(
+                            imageUrl: xcard["card_images"][0]
+                                ["image_url_cropped"],
+                            nome: xcard["name"],
+                            textButon: "Ver Monstro"),
+                      )
+                    ]),
                   ],
                 ),
               ),
