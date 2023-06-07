@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'listas.dart';
@@ -8,15 +10,36 @@ import 'cards.dart';
 //mostrar tabelas
 //var imageUrlSmall = jsonData['card_images'][0]['image_url_small'];
 
+class Filtro extends HookWidget {
+  Filtro();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(),
+    );
+  }
+}
+
+//estado das telas
+class Estado extends StatefulWidget {
+  @override
+  Telas createState() => Telas();
+}
+
 Widget mostrarWidgets(List<Widget> widgets) {
-  return ListView.builder(
-    itemCount: widgets.length,
-    itemBuilder: (context, index) {
-      return widgets[index];
-    },
+  return Container(
+    padding: EdgeInsets.all(16.0),
+    child: ListView.builder(
+      itemCount: widgets.length,
+      itemBuilder: (context, index) {
+        return widgets[index];
+      },
+    ),
   );
 }
 
+//container estilizado
 Container descricao(String text) {
   return Container(
     decoration: BoxDecoration(
@@ -34,6 +57,7 @@ Container descricao(String text) {
   );
 }
 
+//botão para mostrar imagem
 class ShowImage extends StatelessWidget {
   final String imageUrl;
   final String nome;
@@ -64,7 +88,7 @@ class ShowImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return TextButton(
       onPressed: () {
         mostrarImagem(context);
       },
@@ -73,7 +97,8 @@ class ShowImage extends StatelessWidget {
   }
 }
 
-class Telas {
+//função principal para chamadas de telas
+class Telas extends State<Estado> {
   final ValueNotifier<List> tableStateNotifier = new ValueNotifier([]);
 
   void carregar(index) {
@@ -134,17 +159,59 @@ class Telas {
   Future<void> loadCards() async {
     List<Widget> cartoes = [];
 
+    String paramentro = 'Spell Card';
+
+    void atualizarParametro(String novoParametro) {
+      setState(() {
+        paramentro = novoParametro;
+      });
+    }
+
+    Widget escolha(List<String> opc) {
+      return Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.blue),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Escolha o tipo de monstro:"),
+            SizedBox(width: 10),
+            DropdownButton<String>(
+              value: paramentro,
+              onChanged: (String? esc) {
+                if (esc != null) {
+                  atualizarParametro(esc);
+                }
+              },
+              items: opc.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      );
+    }
+
     var api_cartas = Uri(
         scheme: 'https',
         host: 'db.ygoprodeck.com',
         path: 'api/v7/cardinfo.php',
-        queryParameters: {'language': 'pt', 'type': 'XYZ Monster'});
+        queryParameters: {'language': 'pt', 'type': paramentro});
 
     var dados = await http.read(api_cartas);
 
     var jcards = jsonDecode(dados)["data"];
 
-    cartoes = jcards.map<Widget>((xcard) {
+    cartoes.add(escolha(typeopc));
+
+    //criando cards com as informaçoes da api
+    cartoes.addAll(jcards.map<Widget>((xcard) {
       return Card(
         child: Container(
           height: 250,
@@ -192,7 +259,7 @@ class Telas {
                                 ["image_url_cropped"],
                             nome: xcard["name"],
                             textButon: "Ver Monstro"),
-                      )
+                      ) //mostrar arte do mosntro
                     ]),
                   ],
                 ),
@@ -201,9 +268,15 @@ class Telas {
           ),
         ),
       );
-    }).toList();
+    }).toList());
 
     tableStateNotifier.value = cartoes;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    throw UnimplementedError();
   }
 }
 
