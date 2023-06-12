@@ -114,12 +114,12 @@ class Telas extends State<Estado> {
     List<Widget> duelo = [];
 
     // Adicionando widgets aleatórios à lista duelo
-    duelo.add(Text("Widget 1"));
     duelo.add(Container(
       color: Colors.blue,
       height: 50,
       width: 50,
-      child: Text("Caixa azul"),
+      child: Text(
+          "Use suas cartar em modo defesa ou ataque e reduza\n os pontos do vida do oponente a zero"),
     ));
     duelo.add(Image.network(
         "https://www.konami.com/games/s/inquiry/img/logo_konami.png"));
@@ -127,33 +127,140 @@ class Telas extends State<Estado> {
       onPressed: () {
         // Ação ao pressionar o botão
       },
-      child: Text("Clique aqui"),
+      child: Text("Inicie o jogo"),
     ));
 
     tableStateNotifier.value = duelo;
   }
 
   void creditos() {
-    List<Widget> cred = [];
-    cred.add(Center(
-      child: Column(children: [
-        Row(
-          children: [
-            ElevatedButton(onPressed: () {}, child: Text("Botão")),
-            Text("Descrição")
-          ],
-        ),
-        Row(
-          children: [
-            Image.network(
-                "https://static.wikia.nocookie.net/yugioh/images/c/c0/ExodiatheForbiddenOne-TF04-JP-VG.jpg/revision/latest?cb=20161003202322&path-prefix=pt"),
-            Text("Exodia"),
-            TextButton(onPressed: () {}, child: Text("Curtir"))
-          ],
-        )
-      ]),
-    ));
-    tableStateNotifier.value = cred;
+    List<Widget> creditos = [
+      Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 150,
+                height: 150,
+                color: Color.fromARGB(255, 138, 0, 0),
+                child: Center(
+                  child: Image.network(
+                    'https://pbs.twimg.com/profile_images/3190248843/9d85cb3312179987e6f25febd52e5fa2_200x200.png',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(width: 20),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Konami Holdings Corporation (株式会社コナミホールディングス Kabushiki-gaisha Konami Hōrudingusu?) é uma empresa pública japonesa desenvolvedora e distribuidora de jogos eletrônicos, brinquedos, animes, cromos, tokusatsus e máquinas de caça-níqueis. A empresa foi fundada em 1969 como uma empresa de aluguel e reparação de jukeboxes em Osaka, Japão por Kagemasa Kozuki, o ainda atual presidente do conselho de administração e CEO. ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Row(
+            children: [
+              Container(
+                width: 150,
+                height: 150,
+                color: Color.fromARGB(255, 138, 0, 0),
+                child: Center(
+                  child: Image.network(
+                    'https://avatars.githubusercontent.com/u/37552458?v=4',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(width: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      launch('https://ygoprodeck.com/api-guide/');
+                    },
+                    child: Text(
+                      'Clique aqui para visitar o site da API',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () {
+                      launch('https://github.com/AlanOC91');
+                    },
+                    child: Text(
+                      'Clique aqui para visitar o github do desenvolvedor da API',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Row(
+            children: [
+              Container(
+                width: 150,
+                height: 150,
+                color: Color.fromARGB(255, 138, 0, 0),
+                child: Center(
+                  child: Image.network(
+                    'https://scontent.fjdo10-1.fna.fbcdn.net/v/t39.30808-6/332926026_8839187282822982_7674830938355777980_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=S2kCg3sjcgUAX8KLsJy&_nc_ht=scontent.fjdo10-1.fna&oh=00_AfD9_H98Kou1oUONYlS-rKSUFMR-Y3tYKST96-79AIedNQ&oe=648A32A6',
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(width: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Desenvolvedores: Gabriel Cileno e Laian Kevin',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () {
+                      launch('https://github.com/gcileno/yugidev');
+                    },
+                    child: Text(
+                      'Clique aqui para visitar o github do desenvolvedor',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    ];
+    tableStateNotifier.value = creditos;
   }
 
   Future<void> loadCards() async {
