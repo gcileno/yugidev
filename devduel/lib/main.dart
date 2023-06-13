@@ -4,7 +4,7 @@ import 'listas.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-final tela = Telas();
+final dataservice = dataService();
 
 void main() {
   runApp(app);
@@ -17,9 +17,10 @@ MaterialApp app = MaterialApp(
     home: Scaffold(
         appBar: AppBar(title: Text("Dev Duel")),
         body: ValueListenableBuilder(
-            valueListenable: tela.tableStateNotifier,
+            valueListenable: dataservice.tableStateNotifier,
             builder: (_, value, __) {
-              return MostrarDadosState(value.cast());
+              //if (value['type'] == 'loadCards'){}
+              return CardsWidget(value);
             }),
-        bottomNavigationBar:
-            Nav(meuincone: iconico, itemSelectedCallback: tela.carregar)));
+        bottomNavigationBar: Nav(
+            meuincone: iconico, itemSelectedCallback: dataservice.carregar)));

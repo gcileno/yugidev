@@ -16,8 +16,64 @@ class Estado extends StatefulWidget {
   MostrarDadosState createState() => MostrarDadosState(List);
 }
 
-class MostrarDadosState extends State<Estado> {
+class CardsWidget extends StatelessWidget {
+  final dynamic jdados;
+  String parametro = 'Spell Card';
 
+  CardsWidget(this.jdados);
+
+  @override
+  Widget build(BuildContext context) {
+    if (jdados == []) return Text("carregando...");
+    return Center(
+      child: Column(
+        children: [
+          Row(
+            children: [escolha(typeopc)],
+          ),
+          Row(
+            children: [gerarCard(jdados)],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget escolha(List<String> opc) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blue),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Escolha o tipo de monstro:"),
+          SizedBox(width: 10),
+          DropdownButton<String>(
+            value: parametro,
+            onChanged: (String? esc) {
+              if (esc != null) {
+                //setState(() {
+                //  parametro = esc;
+                //});
+              }
+            },
+            items: opc.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MostrarDadosState extends State<Estado> {
   dynamic jdados;
   String parametro = 'Spell Card';
 
@@ -74,7 +130,7 @@ class MostrarDadosState extends State<Estado> {
 }
 
 //função principal para chamadas de telas
-class Telas {
+class dataService {
   final ValueNotifier<List> tableStateNotifier = new ValueNotifier([]);
 
   void carregar(index) {
@@ -230,6 +286,12 @@ class Telas {
     var jcards = jsonDecode(dados)["data"];
 
     tableStateNotifier.value = jcards;
+
+//    tableStateNotifier.value = {
+//      'status': 'ready',
+//      'type': 'loadCards',
+//      'data': jcards
+//    };
   }
 }
 
