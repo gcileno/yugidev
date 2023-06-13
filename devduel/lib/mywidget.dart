@@ -1,4 +1,4 @@
-import 'dart:math';
+// ignore_for_file: non_constant_identifier_names, no_logic_in_create_state
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -10,128 +10,83 @@ import 'cards.dart';
 //mostrar tabelas
 //var imageUrlSmall = jsonData['card_images'][0]['image_url_small'];
 
-class Filtro extends HookWidget {
-  Filtro();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Row(),
-    );
-  }
-}
-
 //estado das telas
 class Estado extends StatefulWidget {
   @override
-  Telas createState() => Telas();
+  MostrarDadosState createState() => MostrarDadosState(List);
 }
 
-Widget mostrarWidgets(List<Widget> widgets) {
-  return Container(
-    padding: EdgeInsets.all(16.0),
-    child: ListView.builder(
-      itemCount: widgets.length,
-      itemBuilder: (context, index) {
-        return widgets[index];
-      },
-    ),
-  );
-}
+class MostrarDadosState extends State<Estado> {
 
-//container estilizado
-Container descricao(String text) {
-  return Container(
-    decoration: BoxDecoration(
-      color: Colors.indigo[50],
-      borderRadius: BorderRadius.circular(8),
-    ),
-    padding: EdgeInsets.all(8),
-    child: Text(
-      text,
-      style: TextStyle(
-        fontWeight: FontWeight.normal,
-        fontSize: 16,
+  dynamic jdados;
+  String parametro = 'Spell Card';
+
+  MostrarDadosState(this.jdados);
+
+  Widget escolha(List<String> opc) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blue),
       ),
-    ),
-  );
-}
-
-//botão para mostrar imagem
-class ShowImage extends StatelessWidget {
-  final String imageUrl;
-  final String nome;
-  final String textButon;
-
-  ShowImage(
-      {required this.imageUrl, required this.nome, required this.textButon});
-
-  void mostrarImagem(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: Text(nome),
-          content: Image.network(imageUrl),
-          actions: [
-            TextButton(
-              child: Text('Fechar'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-            ),
-          ],
-        );
-      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Escolha o tipo de monstro:"),
+          SizedBox(width: 10),
+          DropdownButton<String>(
+            value: parametro,
+            onChanged: (String? esc) {
+              if (esc != null) {
+                setState(() {
+                  parametro = esc;
+                });
+              }
+            },
+            items: opc.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        mostrarImagem(context);
-      },
-      child: Text(textButon),
+    return Center(
+      child: Column(
+        children: [
+          Row(
+            children: [escolha(typeopc)],
+          ),
+          Row(
+            children: [gerarCard(jdados)],
+          ),
+        ],
+      ),
     );
   }
 }
 
 //função principal para chamadas de telas
-class Telas extends State<Estado> {
+class Telas {
   final ValueNotifier<List> tableStateNotifier = new ValueNotifier([]);
 
   void carregar(index) {
     final carregadores = [
       () => duelo(),
-      () => loadCards(),
+      () => loadCards("Spell Card"),
       () => creditos(),
     ];
     carregadores[index]();
   }
 
-  void duelo() {
-    List<Widget> duelo = [];
-
-    // Adicionando widgets aleatórios à lista duelo
-    duelo.add(Container(
-      color: Colors.blue,
-      height: 50,
-      width: 50,
-      child: Text(
-          "Use suas cartar em modo defesa ou ataque e reduza\n os pontos do vida do oponente a zero"),
-    ));
-    duelo.add(Image.network(
-        "https://www.konami.com/games/s/inquiry/img/logo_konami.png"));
-    duelo.add(ElevatedButton(
-      onPressed: () {
-        // Ação ao pressionar o botão
-      },
-      child: Text("Inicie o jogo"),
-    ));
-
-    tableStateNotifier.value = duelo;
-  }
+  void duelo() {}
 
   void creditos() {
     List<Widget> creditos = [
@@ -263,127 +218,18 @@ class Telas extends State<Estado> {
     tableStateNotifier.value = creditos;
   }
 
-  Future<void> loadCards() async {
-    List<Widget> cartoes = [];
-
-    String paramentro = 'Spell Card';
-
-    void atualizarParametro(String novoParametro) {
-      setState(() {
-        paramentro = novoParametro;
-      });
-    }
-
-    Widget escolha(List<String> opc) {
-      return Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.blue),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Escolha o tipo de monstro:"),
-            SizedBox(width: 10),
-            DropdownButton<String>(
-              value: paramentro,
-              onChanged: (String? esc) {
-                if (esc != null) {
-                  atualizarParametro(esc);
-                }
-              },
-              items: opc.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-          ],
-        ),
-      );
-    }
-
-    var api_cartas = Uri(
+  Future<void> loadCards(String nv_parametro) async {
+    var apiCartas = Uri(
         scheme: 'https',
         host: 'db.ygoprodeck.com',
         path: 'api/v7/cardinfo.php',
-        queryParameters: {'language': 'pt', 'type': paramentro});
+        queryParameters: {'language': 'pt', 'type': nv_parametro});
 
-    var dados = await http.read(api_cartas);
+    var dados = await http.read(apiCartas);
 
     var jcards = jsonDecode(dados)["data"];
 
-    cartoes.add(escolha(typeopc));
-
-    //criando cards com as informaçoes da api
-    cartoes.addAll(jcards.map<Widget>((xcard) {
-      return Card(
-        child: Container(
-          height: 250,
-          width: 100,
-          child: Row(
-            children: [
-              Container(
-                child: Image.network(xcard['card_images'][0]['image_url_small'],
-                    fit: BoxFit.cover),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                            child: Text("Nome: " + xcard["name"],
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ))),
-                        Expanded(
-                            child: Text("Tipo: " + xcard["frameType"],
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ))),
-                      ],
-                    ),
-                    Expanded(
-                      child: descricao(xcard["desc"]),
-                    ),
-                    Row(children: [
-                      Expanded(
-                        child: ShowImage(
-                          imageUrl: xcard["card_images"][0]["image_url"],
-                          nome: xcard["name"],
-                          textButon: "Mostrar Carta",
-                        ),
-                      ), //mostrar carta completa
-                      Expanded(
-                        child: ShowImage(
-                            imageUrl: xcard["card_images"][0]
-                                ["image_url_cropped"],
-                            nome: xcard["name"],
-                            textButon: "Ver Monstro"),
-                      ) //mostrar arte do mosntro
-                    ]),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }).toList());
-
-    tableStateNotifier.value = cartoes;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    tableStateNotifier.value = jcards;
   }
 }
 
@@ -411,5 +257,160 @@ class Nav extends HookWidget {
               (obj) => BottomNavigationBarItem(label: "", icon: obj),
             )
             .toList());
+  }
+}
+
+//funções gerais
+
+ListView gerarCard(dynamic jsonData) {
+  var jcards = jsonData;
+
+  var cardWidgets = jcards.map<Widget>((xcard) {
+    return Card(
+      child: Container(
+        height: 250,
+        width: 100,
+        child: Row(
+          children: [
+            Container(
+              child: Image.network(
+                xcard['card_images'][0]['image_url_small'],
+                fit: BoxFit.cover,
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "Nome: " + xcard["name"],
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          "Tipo: " + xcard["frameType"],
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Expanded(
+                    child: descricao(xcard["desc"]),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ShowImage(
+                          imageUrl: xcard["card_images"][0]["image_url"],
+                          nome: xcard["name"],
+                          textButon: "Mostrar Carta",
+                        ),
+                      ),
+                      Expanded(
+                        child: ShowImage(
+                          imageUrl: xcard["card_images"][0]
+                              ["image_url_cropped"],
+                          nome: xcard["name"],
+                          textButon: "Ver Monstro",
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }).toList();
+
+  return ListView.builder(
+    itemCount: cardWidgets.length,
+    itemBuilder: (context, index) {
+      return ListTile(
+        title: cardWidgets[index],
+      );
+    },
+  );
+}
+
+Widget mostrarWidgets(List<Widget> widgets) {
+  return Container(
+    padding: EdgeInsets.all(16.0),
+    child: ListView.builder(
+      itemCount: widgets.length,
+      itemBuilder: (context, index) {
+        return widgets[index];
+      },
+    ),
+  );
+}
+
+//container estilizado
+Container descricao(String text) {
+  return Container(
+    decoration: BoxDecoration(
+      color: Colors.indigo[50],
+      borderRadius: BorderRadius.circular(8),
+    ),
+    padding: EdgeInsets.all(8),
+    child: Text(
+      text,
+      style: TextStyle(
+        fontWeight: FontWeight.normal,
+        fontSize: 16,
+      ),
+    ),
+  );
+}
+
+//botão para mostrar imagem
+class ShowImage extends StatelessWidget {
+  final String imageUrl;
+  final String nome;
+  final String textButon;
+
+  ShowImage(
+      {required this.imageUrl, required this.nome, required this.textButon});
+
+  void mostrarImagem(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(nome),
+          content: Image.network(imageUrl),
+          actions: [
+            TextButton(
+              child: Text('Fechar'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        mostrarImagem(context);
+      },
+      child: Text(textButon),
+    );
   }
 }

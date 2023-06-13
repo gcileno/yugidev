@@ -19,7 +19,7 @@ MaterialApp app = MaterialApp(
         body: ValueListenableBuilder(
             valueListenable: tela.tableStateNotifier,
             builder: (_, value, __) {
-              return mostrarWidgets(value.cast());
+              return MostrarDadosState(value.cast());
             }),
         bottomNavigationBar:
             Nav(meuincone: iconico, itemSelectedCallback: tela.carregar)));
