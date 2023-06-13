@@ -1,16 +1,13 @@
 # devduel
 
-A new Flutter project.
+Um projeto contrído pelos alunos: Gabriel Cileno e Layan
+alunos da Disciplina POO1 ministrada por Prof. Fabrício
 
-## Getting Started
+O projeto consume os dados da API disponibilizada em 
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Run
+instale as dependencias
+  flutter_hooks: ^0.18.6
+  http: ^0.13.6
+em seu arquivo pubspec.lock
+ou passe o comando de instalação das bibliotecas
