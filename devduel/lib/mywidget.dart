@@ -5,16 +5,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'listas.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'cards.dart';
 
 //mostrar tabelas
 //var imageUrlSmall = jsonData['card_images'][0]['image_url_small'];
 
 //estado das telas
-class Estado extends StatefulWidget {
-  @override
-  MostrarDadosState createState() => MostrarDadosState(List);
-}
 
 class CardsWidget extends StatelessWidget {
   final dynamic jdados;
@@ -24,15 +19,25 @@ class CardsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (jdados == []) return Text("carregando...");
-    return Center(
+    //if (jdados == []) return Text("carregando...");
+    return Container(
       child: Column(
         children: [
           Row(
-            children: [escolha(typeopc)],
+            children: [
+              Expanded(
+                child: escolha(typeopc),
+              ),
+            ],
           ),
-          Row(
-            children: [gerarCard(jdados)],
+          Expanded(
+            child: Column(
+              children: [
+                Expanded(
+                  child: gerarCard(jdados),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -41,7 +46,7 @@ class CardsWidget extends StatelessWidget {
 
   Widget escolha(List<String> opc) {
     return Container(
-      width: double.infinity,
+      width: 200,
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.blue),
@@ -53,12 +58,8 @@ class CardsWidget extends StatelessWidget {
           SizedBox(width: 10),
           DropdownButton<String>(
             value: parametro,
-            onChanged: (String? esc) {
-              if (esc != null) {
-                //setState(() {
-                //  parametro = esc;
-                //});
-              }
+            onChanged: (value) {
+              parametro = value.toString();
             },
             items: opc.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
@@ -73,63 +74,63 @@ class CardsWidget extends StatelessWidget {
   }
 }
 
-class MostrarDadosState extends State<Estado> {
-  dynamic jdados;
-  String parametro = 'Spell Card';
+// class MostrarDadosState extends State<Estado> {
+//   dynamic jdados;
+//   String parametro = 'Spell Card';
 
-  MostrarDadosState(this.jdados);
+//   MostrarDadosState(this.jdados);
 
-  Widget escolha(List<String> opc) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.blue),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text("Escolha o tipo de monstro:"),
-          SizedBox(width: 10),
-          DropdownButton<String>(
-            value: parametro,
-            onChanged: (String? esc) {
-              if (esc != null) {
-                setState(() {
-                  parametro = esc;
-                });
-              }
-            },
-            items: opc.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
-    );
-  }
+//   Widget escolha(List<String> opc) {
+//     return Container(
+//       width: double.infinity,
+//       padding: EdgeInsets.all(10),
+//       decoration: BoxDecoration(
+//         border: Border.all(color: Colors.blue),
+//       ),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           Text("Escolha o tipo de monstro:"),
+//           SizedBox(width: 10),
+//           DropdownButton<String>(
+//             value: parametro,
+//             onChanged: (String? esc) {
+//               if (esc != null) {
+//                 setState(() {
+//                   parametro = esc;
+//                 });
+//               }
+//             },
+//             items: opc.map<DropdownMenuItem<String>>((String value) {
+//               return DropdownMenuItem<String>(
+//                 value: value,
+//                 child: Text(value),
+//               );
+//             }).toList(),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          Row(
-            children: [escolha(typeopc)],
-          ),
-          Row(
-            children: [gerarCard(jdados)],
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: Column(
+//         children: [
+//           Row(
+//             children: [escolha(typeopc)],
+//           ),
+//           Row(
+//             children: [gerarCard(jdados)],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
-//função principal para chamadas de telas
+//função principal para chamadas da api
 class dataService {
   final ValueNotifier<List> tableStateNotifier = new ValueNotifier([]);
 
