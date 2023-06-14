@@ -59,7 +59,9 @@ class CardsWidget extends StatelessWidget {
           DropdownButton<String>(
             value: parametro,
             onChanged: (value) {
-              parametro = value.toString();
+              //parametro = value.toString();
+              //print(value.toString());
+              dataService.loadCards(value);
             },
             items: opc.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
@@ -131,7 +133,7 @@ class CardsWidget extends StatelessWidget {
 // }
 
 //função principal para chamadas da api
-class dataService {
+class DataService {
   final ValueNotifier<List> tableStateNotifier = new ValueNotifier([]);
 
   void carregar(index) {
@@ -275,7 +277,7 @@ class dataService {
     tableStateNotifier.value = creditos;
   }
 
-  Future<void> loadCards(String nv_parametro) async {
+  Future<void> loadCards(String? nv_parametro) async {
     var apiCartas = Uri(
         scheme: 'https',
         host: 'db.ygoprodeck.com',
@@ -295,6 +297,8 @@ class dataService {
 //    };
   }
 }
+
+final dataService = DataService();
 
 //barra inferior
 class Nav extends HookWidget {
