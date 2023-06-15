@@ -8,7 +8,7 @@ class Player {
 
   Player(this.nome, this.hand, this.deck);
 
-  void fillHandFromDeck() {
+  void puxarCarta() {
     if (deck.baralho.length >= 2) {
       deck.baralho.shuffle(Random());
       hand.addAll(deck.baralho.take(2));
