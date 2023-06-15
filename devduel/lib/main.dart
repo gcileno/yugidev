@@ -1,10 +1,7 @@
 import 'mywidget.dart';
 import 'package:flutter/material.dart';
 import 'listas.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
-//final dataservice = dataService();
 
 void main() {
   runApp(app);

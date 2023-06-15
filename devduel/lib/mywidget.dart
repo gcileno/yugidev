@@ -1,34 +1,25 @@
-// ignore_for_file: non_constant_identifier_names, no_logic_in_create_state
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'listas.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-//mostrar tabelas
-//var imageUrlSmall = jsonData['card_images'][0]['image_url_small'];
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'data.dart';
 
 //estado das telas
 
 class CardsWidget extends StatelessWidget {
   final dynamic jdados;
-  String parametro = 'Spell Card';
 
   CardsWidget(this.jdados);
 
   @override
   Widget build(BuildContext context) {
-    //if (jdados == []) return Text("carregando...");
     return Container(
       child: Column(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: escolha(typeopc),
-              ),
-            ],
+          Center(
+            child: escolha2(typeopc, arquetipo),
           ),
           Expanded(
             child: Column(
@@ -43,263 +34,15 @@ class CardsWidget extends StatelessWidget {
       ),
     );
   }
-
-  Widget escolha(List<String> opc) {
-    return Container(
-      width: 200,
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.blue),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text("Escolha o tipo de monstro:"),
-          SizedBox(width: 10),
-          DropdownButton<String>(
-            value: parametro,
-            onChanged: (value) {
-              //parametro = value.toString();
-              //print(value.toString());
-              dataService.loadCards(value);
-            },
-            items: opc.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
-// class MostrarDadosState extends State<Estado> {
-//   dynamic jdados;
-//   String parametro = 'Spell Card';
-
-//   MostrarDadosState(this.jdados);
-
-//   Widget escolha(List<String> opc) {
-//     return Container(
-//       width: double.infinity,
-//       padding: EdgeInsets.all(10),
-//       decoration: BoxDecoration(
-//         border: Border.all(color: Colors.blue),
-//       ),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           Text("Escolha o tipo de monstro:"),
-//           SizedBox(width: 10),
-//           DropdownButton<String>(
-//             value: parametro,
-//             onChanged: (String? esc) {
-//               if (esc != null) {
-//                 setState(() {
-//                   parametro = esc;
-//                 });
-//               }
-//             },
-//             items: opc.map<DropdownMenuItem<String>>((String value) {
-//               return DropdownMenuItem<String>(
-//                 value: value,
-//                 child: Text(value),
-//               );
-//             }).toList(),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Center(
-//       child: Column(
-//         children: [
-//           Row(
-//             children: [escolha(typeopc)],
-//           ),
-//           Row(
-//             children: [gerarCard(jdados)],
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-//função principal para chamadas da api
-class DataService {
-  final ValueNotifier<List> tableStateNotifier = new ValueNotifier([]);
-
-  void carregar(index) {
-    final carregadores = [
-      () => duelo(),
-      () => loadCards("Spell Card"),
-      () => creditos(),
-    ];
-    carregadores[index]();
-  }
-
-  void duelo() {}
-
-  void creditos() {
-    List<Widget> creditos = [
-      Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 150,
-                height: 150,
-                color: Color.fromARGB(255, 138, 0, 0),
-                child: Center(
-                  child: Image.network(
-                    'https://pbs.twimg.com/profile_images/3190248843/9d85cb3312179987e6f25febd52e5fa2_200x200.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Konami Holdings Corporation (株式会社コナミホールディングス Kabushiki-gaisha Konami Hōrudingusu?) é uma empresa pública japonesa desenvolvedora e distribuidora de jogos eletrônicos, brinquedos, animes, cromos, tokusatsus e máquinas de caça-níqueis. A empresa foi fundada em 1969 como uma empresa de aluguel e reparação de jukeboxes em Osaka, Japão por Kagemasa Kozuki, o ainda atual presidente do conselho de administração e CEO. ',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Row(
-            children: [
-              Container(
-                width: 150,
-                height: 150,
-                color: Color.fromARGB(255, 138, 0, 0),
-                child: Center(
-                  child: Image.network(
-                    'https://avatars.githubusercontent.com/u/37552458?v=4',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              SizedBox(width: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      launch('https://ygoprodeck.com/api-guide/');
-                    },
-                    child: Text(
-                      'Clique aqui para visitar o site da API',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () {
-                      launch('https://github.com/AlanOC91');
-                    },
-                    child: Text(
-                      'Clique aqui para visitar o github do desenvolvedor da API',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Row(
-            children: [
-              Container(
-                width: 150,
-                height: 150,
-                color: Color.fromARGB(255, 138, 0, 0),
-                child: Center(
-                  child: Image.network(
-                    'https://scontent.fjdo10-1.fna.fbcdn.net/v/t39.30808-6/332926026_8839187282822982_7674830938355777980_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=S2kCg3sjcgUAX8KLsJy&_nc_ht=scontent.fjdo10-1.fna&oh=00_AfD9_H98Kou1oUONYlS-rKSUFMR-Y3tYKST96-79AIedNQ&oe=648A32A6',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              SizedBox(width: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Desenvolvedores: Gabriel Cileno e Laian Kevin',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () {
-                      launch('https://github.com/gcileno/yugidev');
-                    },
-                    child: Text(
-                      'Clique aqui para visitar o github do desenvolvedor',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    ];
-    tableStateNotifier.value = creditos;
-  }
-
-  Future<void> loadCards(String? nv_parametro) async {
-    var apiCartas = Uri(
-        scheme: 'https',
-        host: 'db.ygoprodeck.com',
-        path: 'api/v7/cardinfo.php',
-        queryParameters: {'language': 'pt', 'type': nv_parametro});
-
-    var dados = await http.read(apiCartas);
-
-    var jcards = jsonDecode(dados)["data"];
-
-    tableStateNotifier.value = jcards;
-
-//    tableStateNotifier.value = {
-//      'status': 'ready',
-//      'type': 'loadCards',
-//      'data': jcards
-//    };
-  }
-}
-
+//
+//
+//criando meu data service
 final dataService = DataService();
 
+//
+//
 //barra inferior
 class Nav extends HookWidget {
   List<Icon> meuincone;
@@ -327,16 +70,28 @@ class Nav extends HookWidget {
   }
 }
 
+//
 //funções gerais
+//criadas para servir a função cardwidget
+//processando e criando widgetes especidifos para a necessidae da aplicação
 
 ListView gerarCard(dynamic jsonData) {
   var jcards = jsonData;
 
   var cardWidgets = jcards.map<Widget>((xcard) {
     return Card(
+      elevation: 8,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Container(
-        height: 250,
-        width: 100,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: Color.fromARGB(255, 192, 192, 192), // Cor da borda
+              width: 2, // Espessura da borda
+            )),
+        height: 310,
         child: Row(
           children: [
             Container(
@@ -349,41 +104,67 @@ ListView gerarCard(dynamic jsonData) {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          "Nome: " + xcard["name"],
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
+                  Padding(
+                    padding: EdgeInsets.all(
+                        6), // Ajuste o espaçamento interno da borda aqui
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.indigo,
+                          width:
+                              1, // Ajuste a largura da borda conforme necessário
+                        ),
+                        borderRadius: BorderRadius.circular(
+                            8), // Ajuste o raio do border conforme necessário
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.all(
+                            0.9), // Ajuste o espaçamento interno do conteúdo aqui
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: SizedBox(
+                                height: 24,
+                                child: Text(
+                                  xcard["name"],
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Center(
+                              child: SizedBox(
+                                height: 22,
+                                child: Text(
+                                  "Tipo: " + xcard["frameType"],
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Expanded(
-                        child: Text(
-                          "Tipo: " + xcard["frameType"],
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                   Expanded(
                     child: descricao(xcard["desc"]),
                   ),
                   Row(
                     children: [
-                      Expanded(
+                      Center(
                         child: ShowImage(
                           imageUrl: xcard["card_images"][0]["image_url"],
                           nome: xcard["name"],
                           textButon: "Mostrar Carta",
                         ),
                       ),
-                      Expanded(
+                      Center(
                         child: ShowImage(
                           imageUrl: xcard["card_images"][0]
                               ["image_url_cropped"],
@@ -391,6 +172,8 @@ ListView gerarCard(dynamic jsonData) {
                           textButon: "Ver Monstro",
                         ),
                       ),
+                      Center(child: Icon(Icons.favorite)),
+                      Center(child: Icon(Icons.share))
                     ],
                   ),
                 ],
@@ -412,31 +195,27 @@ ListView gerarCard(dynamic jsonData) {
   );
 }
 
-Widget mostrarWidgets(List<Widget> widgets) {
-  return Container(
-    padding: EdgeInsets.all(16.0),
-    child: ListView.builder(
-      itemCount: widgets.length,
-      itemBuilder: (context, index) {
-        return widgets[index];
-      },
-    ),
-  );
-}
-
 //container estilizado
-Container descricao(String text) {
-  return Container(
-    decoration: BoxDecoration(
-      color: Colors.indigo[50],
-      borderRadius: BorderRadius.circular(8),
-    ),
+Widget descricao(String text) {
+  return Padding(
     padding: EdgeInsets.all(8),
-    child: Text(
-      text,
-      style: TextStyle(
-        fontWeight: FontWeight.normal,
-        fontSize: 16,
+    child: Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Color.fromARGB(255, 88, 111, 243),
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: EdgeInsets.all(8),
+      child: SingleChildScrollView(
+        child: Text(
+          text,
+          style: TextStyle(
+            fontWeight: FontWeight.normal,
+            fontSize: 16,
+          ),
+        ),
       ),
     ),
   );
@@ -448,8 +227,11 @@ class ShowImage extends StatelessWidget {
   final String nome;
   final String textButon;
 
-  ShowImage(
-      {required this.imageUrl, required this.nome, required this.textButon});
+  ShowImage({
+    required this.imageUrl,
+    required this.nome,
+    required this.textButon,
+  });
 
   void mostrarImagem(BuildContext context) {
     showDialog(
@@ -459,11 +241,24 @@ class ShowImage extends StatelessWidget {
           title: Text(nome),
           content: Image.network(imageUrl),
           actions: [
-            TextButton(
-              child: Text('Fechar'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(dialogContext).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blue,
+                  padding: EdgeInsets.all(8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  'Fechar',
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
             ),
           ],
         );
@@ -473,11 +268,101 @@ class ShowImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        mostrarImagem(context);
-      },
-      child: Text(textButon),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 9.0),
+      child: ElevatedButton(
+        onPressed: () {
+          mostrarImagem(context);
+        },
+        style: ElevatedButton.styleFrom(
+          primary: Color.fromARGB(255, 45, 146, 150),
+          padding: EdgeInsets.all(7),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        child: Text(
+          textButon,
+          style: TextStyle(
+            fontSize: 12,
+          ),
+        ),
+      ),
     );
   }
+}
+
+//função melhorada para as oções de escolha do usuario e retirado da função principal
+Widget escolha2(List<String> typeopc, List<Map<String, dynamic>> arquetipo) {
+  var parametro = {'': ''};
+  List<Map<String, dynamic>> filteredArquetipo = List.from(arquetipo);
+
+  return Container(
+    padding: EdgeInsets.all(10),
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.blue),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Escolha o tipo de monstro:"),
+        SizedBox(width: 10),
+        DropdownButton<String>(
+          onChanged: (value) {
+            parametro = {'type': value.toString()};
+            dataService.loadCards(parametro);
+          },
+          items: typeopc.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        ),
+        SizedBox(width: 10),
+        Expanded(
+          child: TypeAheadField<String>(
+            textFieldConfiguration: TextFieldConfiguration(
+              onChanged: (text) {
+                String filter = text.toLowerCase();
+                filteredArquetipo = arquetipo
+                    .where((item) => item['archetype_name']
+                        .toString()
+                        .toLowerCase()
+                        .contains(filter))
+                    .toList();
+                parametro = {'archetype': text};
+                dataService.loadCards(parametro);
+              },
+              decoration: InputDecoration(
+                hintText:
+                    'Ou digite e selecione o arquetipo de card que deseja:',
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blue),
+                ),
+              ),
+            ),
+            suggestionsCallback: (pattern) async {
+              return arquetipo
+                  .where((item) => item['archetype_name']
+                      .toString()
+                      .toLowerCase()
+                      .contains(pattern.toLowerCase()))
+                  .map((item) => item['archetype_name'].toString())
+                  .toList();
+            },
+            itemBuilder: (context, suggestion) {
+              return ListTile(
+                title: Text(suggestion),
+              );
+            },
+            onSuggestionSelected: (suggestion) {
+              parametro = {'archetype': suggestion.toString()};
+              dataService.loadCards(parametro);
+            },
+          ),
+        ),
+      ],
+    ),
+  );
 }
