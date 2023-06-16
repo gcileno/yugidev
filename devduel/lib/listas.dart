@@ -6,6 +6,8 @@ List<Icon> iconico = [
   Icon(Icons.info_outline),
 ];
 
+List<String> favoritos = [];
+
 var typeopc = [
   'Skill Card',
   'Spell Card',
