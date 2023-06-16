@@ -88,13 +88,14 @@ ListView gerarCard(dynamic jsonData) {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: Color.fromARGB(255, 192, 192, 192), // Cor da borda
-              width: 2, // Espessura da borda
+              color: Color.fromARGB(255, 192, 192, 192),
+              width: 2,
             )),
-        height: 310,
+        height: 330,
         child: Row(
           children: [
             Container(
+              padding: EdgeInsets.all(12),
               child: Image.network(
                 xcard['card_images'][0]['image_url_small'],
                 fit: BoxFit.cover,
@@ -172,7 +173,17 @@ ListView gerarCard(dynamic jsonData) {
                           textButon: "Ver Monstro",
                         ),
                       ),
-                      Center(child: Icon(Icons.favorite)),
+                      Center(
+                          child: IconButton(
+                        icon: Icon(
+                          Icons.favorite,
+                        ),
+                        onPressed: () {
+                          favoritos.add(xcard["card_images"][0]["image_url"]);
+                          print(favoritos);
+                        },
+                        color: Colors.red,
+                      )),
                       Center(child: Icon(Icons.share))
                     ],
                   ),
@@ -363,6 +374,27 @@ Widget escolha2(List<String> typeopc, List<Map<String, dynamic>> arquetipo) {
           ),
         ),
       ],
+    ),
+  );
+}
+
+Widget imageCarousel(List<String> imageUrls) {
+  return Container(
+    height: 200,
+    child: PageView.builder(
+      itemCount: imageUrls.length,
+      itemBuilder: (context, index) {
+        return Container(
+          margin: EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            image: DecorationImage(
+              image: NetworkImage(imageUrls[index]),
+              fit: BoxFit.cover,
+            ),
+          ),
+        );
+      },
     ),
   );
 }
