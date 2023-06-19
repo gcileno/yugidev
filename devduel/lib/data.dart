@@ -6,9 +6,10 @@ import 'dart:convert';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'data.dart';
 
+enum TableStatus{idle,loading,ready,error,duelo} // tabela de status
 //função para consumo da api
 class DataService {
-  final ValueNotifier<List> tableStateNotifier = new ValueNotifier([]);
+  final ValueNotifier<Map<String,dynamic>> tableStateNotifier = new ValueNotifier({'status':TableStatus.idle,'dataObjects':[]});
 
   void carregar(index) {
     final carregadores = [
@@ -16,10 +17,26 @@ class DataService {
       () => loadCards({'': ''}),
       () => creditos(),
     ];
+    tableStateNotifier.value = {
+
+      'status': TableStatus.loading,
+
+      'dataObjects': []
+
+    };
     carregadores[index]();
   }
 
-  void duelo() {}
+  void duelo() {
+    tableStateNotifier.value = {
+
+        'status': TableStatus.duelo,
+
+        'dataObjects': []
+
+      };
+
+  }
 
   void creditos() {
     List<Widget> creditos = [
@@ -164,7 +181,13 @@ class DataService {
 
     var jcards = jsonDecode(dados)["data"];
 
-    tableStateNotifier.value = jcards;
+    tableStateNotifier.value = {
+
+        'status': TableStatus.ready,
+
+        'dataObjects': jcards
+
+      };
 
 //    tableStateNotifier.value = {
 //      'status': 'ready',
