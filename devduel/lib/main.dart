@@ -31,18 +31,19 @@ MaterialApp app = MaterialApp(
                   );
 
                 case TableStatus.ready:
-                  if (value['dataObjects'] is List<Widget>) {
-                    return Column(
-                      children: value['dataObjects'],
-                    );
-                  } else {
-                    return CardsWidget(value['dataObjects']);
-                  }
-
+                  return CardsWidget(value['dataObjects']);
                 case TableStatus.error:
                   return Text("Erro (X_X)");
                 case TableStatus.duelo:
                   return Text("pagina de duelo");
+                case TableStatus.creditos:
+                  return ListView.builder(
+                    itemCount.creditos.lenght,
+                    itemBuilder:(context,index){
+                      return ListTile(title:creditos[index],);
+                      
+                    },
+                  );
 
               }
 
