@@ -161,8 +161,8 @@ Widget campo() {
 }
 
 class Duelo extends StatelessWidget {
-  Map<String, dynamic> jdado;
-  Duelo(this.jdado);
+  // Map<String, dynamic> jdado;
+  // Duelo(this.jdado);
 
   @override
   Widget build(BuildContext context) {
@@ -204,3 +204,5 @@ class Duelo extends StatelessWidget {
     );
   }
 }
+
+
