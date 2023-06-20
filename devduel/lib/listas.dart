@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 List<Icon> iconico = [
   Icon(Icons.close_sharp),
   Icon(Icons.manage_search),
+  Icon(Icons.favorite_border_sharp),
   Icon(Icons.info_outline),
 ];
 
-List<String> favoritos = [];
+List<String> MeusFavoritos = [];
 
 var typeopc = [
   'Skill Card',

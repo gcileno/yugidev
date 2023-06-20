@@ -4,6 +4,7 @@ import 'listas.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'data.dart';
 
 //estado das telas
@@ -25,7 +26,7 @@ class CardsWidget extends StatelessWidget {
             child: Column(
               children: [
                 Expanded(
-                  child: gerarCard(jdados),
+                  child: gerarCard(jdados, context),
                 ),
               ],
             ),
@@ -54,7 +55,7 @@ class Nav extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var state = useState(1);
+    var state = useState(0);
 
     return BottomNavigationBar(
         onTap: (index) {
@@ -62,6 +63,7 @@ class Nav extends HookWidget {
           itemSelectedCallback(index);
         },
         currentIndex: state.value,
+        type: BottomNavigationBarType.fixed,
         items: meuincone
             .map(
               (obj) => BottomNavigationBarItem(label: "", icon: obj),
@@ -75,7 +77,7 @@ class Nav extends HookWidget {
 //criadas para servir a função cardwidget
 //processando e criando widgetes especidifos para a necessidae da aplicação
 
-ListView gerarCard(dynamic jsonData) {
+ListView gerarCard(dynamic jsonData, context) {
   var jcards = jsonData;
 
   var cardWidgets = jcards.map<Widget>((xcard) {
@@ -179,8 +181,14 @@ ListView gerarCard(dynamic jsonData) {
                           Icons.favorite,
                         ),
                         onPressed: () {
-                          favoritos.add(xcard["card_images"][0]["image_url"]);
-                          print(favoritos);
+                          MeusFavoritos.add(
+                              xcard["card_images"][0]["image_url"]);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Adcionado ao '),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
                         },
                         color: Colors.red,
                       )),
@@ -309,7 +317,7 @@ Widget escolha2(List<String> typeopc, List<Map<String, dynamic>> arquetipo) {
   List<Map<String, dynamic>> filteredArquetipo = List.from(arquetipo);
 
   return Container(
-    padding: EdgeInsets.all(10),
+    padding: EdgeInsets.all(8),
     decoration: BoxDecoration(
       border: Border.all(color: Colors.blue),
     ),
@@ -317,7 +325,7 @@ Widget escolha2(List<String> typeopc, List<Map<String, dynamic>> arquetipo) {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text("Escolha o tipo de monstro:"),
-        SizedBox(width: 10),
+        SizedBox(width: double.minPositive),
         DropdownButton<String>(
           onChanged: (value) {
             parametro = {'type': value.toString()};
@@ -378,23 +386,105 @@ Widget escolha2(List<String> typeopc, List<Map<String, dynamic>> arquetipo) {
   );
 }
 
+//
+//
+////mostrar imagens em carrosel
 Widget imageCarousel(List<String> imageUrls) {
-  return Container(
-    height: 200,
-    child: PageView.builder(
-      itemCount: imageUrls.length,
-      itemBuilder: (context, index) {
-        return Container(
-          margin: EdgeInsets.symmetric(horizontal: 8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            image: DecorationImage(
-              image: NetworkImage(imageUrls[index]),
-              fit: BoxFit.cover,
-            ),
+  return CarouselSlider(
+    options: CarouselOptions(
+      height: double.maxFinite,
+      viewportFraction: 0.8,
+      initialPage: 0,
+      enableInfiniteScroll: true,
+      enlargeCenterPage:
+          false, // Evita o zoom na imagem central // Exibe a imagem completa sem cortes
+    ),
+    items: imageUrls.map((imageUrl) {
+      return Container(
+        child: Center(
+          child: Image.network(
+            imageUrl,
+            fit: BoxFit.contain,
           ),
-        );
-      },
+        ),
+      );
+    }).toList(),
+  );
+}
+
+//
+//
+//Tela de boas vindas
+Widget welcome() {
+  return Container(
+    width: 300,
+    height: 400,
+    decoration: BoxDecoration(
+        color: Color.fromARGB(255, 195, 223, 247),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Color.fromARGB(179, 14, 0, 75))),
+    padding: EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Bem-vindo!',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 18, 98, 163),
+          ),
+        ),
+        Text('Clique em:'),
+        SizedBox(height: 20),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.close_sharp, color: Colors.blue),
+                  SizedBox(width: 10),
+                  Text(
+                    'Para a tela de Duelo',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Icon(Icons.manage_search, color: Colors.green),
+                  SizedBox(width: 10),
+                  Text(
+                    'Para pesquisar cartas',
+                    style: TextStyle(color: Colors.green),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Icon(Icons.favorite_border_sharp, color: Colors.red),
+                  SizedBox(width: 10),
+                  Text(
+                    'Para ver suas cartas',
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Icon(Icons.info_outline, color: Colors.orange),
+                  SizedBox(width: 10),
+                  Text(
+                    'Para informações do app',
+                    style: TextStyle(color: Colors.orange),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     ),
   );
 }

@@ -1,8 +1,9 @@
+import 'package:devduel/duelo.dart';
+
 import 'mywidget.dart';
 import 'package:flutter/material.dart';
 import 'listas.dart';
 import 'data.dart';
-
 
 void main() {
   runApp(app);
@@ -19,7 +20,7 @@ MaterialApp app = MaterialApp(
             builder: (_, value, __) {
               switch (value['status']) {
                 case TableStatus.idle:
-                  return Center(child: Text("Toque algum botão"));
+                  return Center(child: welcome());
 
                 case TableStatus.loading:
                   return Center(
@@ -32,24 +33,31 @@ MaterialApp app = MaterialApp(
 
                 case TableStatus.ready:
                   return CardsWidget(value['dataObjects']);
+                //tela de erro
                 case TableStatus.error:
                   return Text("Erro (X_X)");
+                //tela duelo
+                //
                 case TableStatus.duelo:
-                  return Text("pagina de duelo");
+                  return Duelo();
+                //tela creditos
+                //
                 case TableStatus.creditos:
                   return ListView.builder(
-                    itemCount.creditos.lenght,
-                    itemBuilder:(context,index){
-                      return ListTile(title:creditos[index],);
-                      
+                    itemCount: creditos.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: creditos[index],
+                      );
                     },
                   );
-
+                //tela favoritos
+                //
+                case TableStatus.favorito:
+                  return imageCarousel(MeusFavoritos);
               }
 
               return Text("...");
-              //if (value['type'] == 'loadCards'){}
-              //return CardsWidget(value);
             }),
         bottomNavigationBar: Nav(
             meuincone: iconico, itemSelectedCallback: dataService.carregar)));
