@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'player.dart';
 
-Widget mesa1() {
+Widget mesa1(dynamic jsonData) {
+  var _cards = jsonData;
+
+  Player jogador = Player('Jogador 1', criarBaralho(jsonData));
+  jogador.puxarCarta();
+
   return Container(
       height: 200,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
@@ -24,7 +30,7 @@ Widget mesa1() {
                   children: [
                     Center(
                       child: Image.network(
-                        'https://i.pinimg.com/564x/2e/fe/0d/2efe0d53dd2799777a951e26af018381.jpg',
+                        jogador.hand[0].image,
                         width: 90,
                         height: 180,
                       ),
@@ -36,13 +42,13 @@ Widget mesa1() {
                           onPressed: () {
                             // Ação do botão
                           },
-                          child: Text('Ataque'),
+                          child: Text(jogador.hand[0].atk.toString()),
                         ),
                         ElevatedButton(
                           onPressed: () {
                             // Ação do botão
                           },
-                          child: Text('Defesa'),
+                          child: Text(jogador.hand[0].def.toString()),
                         ),
                       ],
                     ),
@@ -161,8 +167,8 @@ Widget campo() {
 }
 
 class Duelo extends StatelessWidget {
-  // Map<String, dynamic> jdado;
-  // Duelo(this.jdado);
+  dynamic jdado;
+  Duelo(this.jdado);
 
   @override
   Widget build(BuildContext context) {
@@ -173,7 +179,7 @@ class Duelo extends StatelessWidget {
           children: [
             mesaPc(),
             Expanded(child: Container()), // Ocupa espaço restante
-            mesa1(),
+            mesa1(jdado),
           ],
         ),
         Align(
@@ -204,5 +210,3 @@ class Duelo extends StatelessWidget {
     );
   }
 }
-
-
