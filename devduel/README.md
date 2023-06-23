@@ -4,6 +4,10 @@ Um projeto construído pelos alunos **Gabriel Cileno** e **Layan** para a discip
 
 O projeto consome os dados de uma API disponibilizada em [https://ygoprodeck.com/api-guide/].
 
+## Considere a branch Estado
+1. Para mudar a branch use o comando:
+   - 'git checkout estado'
+
 ## Execução
 Para executar o projeto, siga as etapas abaixo:
 
